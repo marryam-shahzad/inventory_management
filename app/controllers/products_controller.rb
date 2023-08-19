@@ -87,8 +87,7 @@ class ProductsController < ApplicationController
   end
 
 
-
-   def edit
+  def edit
     @product = Product.find(params[:id])
     @stores = Store.all
   end
@@ -101,6 +100,7 @@ class ProductsController < ApplicationController
       render :edit
     end
   end
+
 
 
 

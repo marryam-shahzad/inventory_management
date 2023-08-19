@@ -1,8 +1,10 @@
+<%= link_to "Go to Stores", stores_path %>
 <h1>Products</h1>
 <%= form_tag products_path, method: :get do %>
   <%= text_field_tag :search, params[:search], placeholder: "Search by name" %>  <%= submit_tag "Search" %>
 <% end %>
 
+<%= link_to "New Product", new_product_path %>
 <table>
   <thead>
     <tr>
@@ -43,4 +45,4 @@
 </table>
 <%= will_paginate @products %>
 
-<%= link_to "New Product", new_product_path %>
+

@@ -1,26 +1,22 @@
-
-
-
-
-
 <h1>Edit Product</h1>
 
-<%= form_with model: @product, url: products_path do |form| %>
-  <div>
+<%= form_with model: @product, url: product_path(@product), method: :patch do |form| %>
+  <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
   </div>
-  <div>
+
+  <div class="field">
     <%= form.label :description %>
     <%= form.text_area :description %>
   </div>
   <%= form.file_field :image %>
-  <div>
+  <div class="field">
     <%= form.label :store_ids, "Select Stores" %><br>
     <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
   </div>
 
-   <div class="actions">
+  <div class="actions">
     <%= form.submit 'Update Product', class: 'btn btn-primary' %>
   </div>
 <% end %>
