@@ -1,0 +1,27 @@
+  <div>
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
+  </div>
+
+
+
+<div>
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
+  </div>
+
+
+    <div>
+    <%= form.fields_for :product_stores do |product_store_fields| %>
+      <%= render 'product_store_fields', f: product_store_fields %>
+    <% end %>
+  </div>
+
+
+  
+<p><strong>Prices:</strong></p>
+<ul>
+  <% @product.stores.each do |store| %>
+    <li><%= "#{store.name}: #{store_price(@product, store)}" %></li>
+  <% end %>
+</ul>

@@ -1,0 +1,23 @@
+<h1>New Product</h1>
+
+<%= form_with model: @product, url: products_path do |form| %>
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+  <%= form.file_field :image %>
+  <div>
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
+  </div>
+
+  <div>
+    <%= form.submit "Create Product" %>
+  </div>
+<% end %>
+
+<%= link_to "Back to Products", products_path %>

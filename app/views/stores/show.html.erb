@@ -1,0 +1,12 @@
+<h1><%= @store.name %></h1>
+
+<p><strong>Location:</strong> <%= @store.location %></p>
+
+<p><strong>Products:</strong></p>
+<ul>
+  <% @store.products.each do |product| %>
+    <li><%= product.name %> - <%= product.description %></li>
+  <% end %>
+</ul>
+
+<%= link_to "Back to Stores", stores_path %>

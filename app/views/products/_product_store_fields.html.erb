@@ -1,0 +1,4 @@
+<div class="product-store-fields">
+  <%= f.collection_select :store_id, Store.all, :id, :name, prompt: "Select Store" %>
+  <%= f.text_field :price, placeholder: "Enter Price" %>
+</div>
