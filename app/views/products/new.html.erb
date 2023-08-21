@@ -1,23 +1,44 @@
 <h1>New Product</h1>
 
-<%= form_with model: @product, url: products_path do |form| %>
+<%= form_for @product, url: products_path, method: :post, multipart: true do |f| %>
   <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
   </div>
   <div>
-    <%= form.label :description %>
-    <%= form.text_area :description %>
+    <%= f.label :description %>
+    <%= f.text_area :description %>
   </div>
-  <%= form.file_field :image %>
-  <div>
-    <%= form.label :store_ids, "Select Stores" %><br>
-    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
+  <%= f.file_field :image %>
+
+
+  <div class="field">
+    <%= f.label :store_ids, "Select Stores" %><br>
+    <% @stores.each do |store| %>
+      <%= f.fields_for :product_stores_attributes, @product.product_stores.where(store_id: store.id).first_or_initialize do |ps| %>
+        <%= ps.hidden_field :store_id, value: store.id %>
+        <%= ps.label :price, "Price for #{store.name}" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :store_ids, "Select Stores for Quantity" %><br>
+    <% @stores.each do |store| %>
+      <%= f.fields_for :quantities_attributes, @product.quantities.where(store_id: store.id).first_or_initialize do |q| %>
+        <%= q.hidden_field :store_id, value: store.id %>
+        <%= q.label :quantity, "Quantity for #{store.name}" %>
+        <%= q.number_field :quantity %><br>
+      <% end %>
+    <% end %>
   </div>
 
   <div>
-    <%= form.submit "Create Product" %>
+    <%= f.submit "Create Product" %>
   </div>
 <% end %>
 
 <%= link_to "Back to Products", products_path %>
+
+

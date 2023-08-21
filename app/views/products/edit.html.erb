@@ -1,24 +1,46 @@
+
+
+
+
+
+
 <h1>Edit Product</h1>
 
-<%= form_with model: @product, url: product_path(@product), method: :patch do |form| %>
+<%= form_for @product do |f| %>
   <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+  
+  <div class="field">
+    <%= f.label :image %>
+    <%= f.file_field :image %>
+    <% if @product.image.attached? %>
+      <br>
+      <%= image_tag @product.image, width: '100', height: '100' %>
+    <% end %>
   </div>
 
-  <div class="field">
-    <%= form.label :description %>
-    <%= form.text_area :description %>
+ <div class="field">
+    <%= f.label :store_ids, "Select Stores" %><br>
+    <%= collection_check_boxes :product_store, :store_id, Store.all, :id, :name do |b| %>
+      <%= b.label { b.check_box + b.text } %><br>
+      <% product_store = @product.product_stores.find_by(store_id: b.value) %>
+      <%= fields_for product_store, product_store do |ps| %>
+        <%= ps.label :price, "Price" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
   </div>
-  <%= form.file_field :image %>
-  <div class="field">
-    <%= form.label :store_ids, "Select Stores" %><br>
-    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
-  </div>
-
+  
   <div class="actions">
-    <%= form.submit 'Update Product', class: 'btn btn-primary' %>
+    <%= f.submit "Update Product" %>
   </div>
 <% end %>
 
-<%= link_to 'Back', products_path, class: 'btn btn-secondary' %>
+<%= link_to 'Back', products_path %>

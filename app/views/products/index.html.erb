@@ -5,12 +5,14 @@
 <% end %>
 
 <%= link_to "New Product", new_product_path %>
-<table>
-  <thead>
+<table >
+  <thead >
     <tr>
       <th>Name</th>
       <th>Description</th>
       <th>Stores</th>
+      <th>Prices</th>
+      <th>Quanity</th>
       <th>Images</th>
       <th>Actions</th>
     </tr>
@@ -20,7 +22,22 @@
       <tr>
         <td><%= product.name %></td>
         <td><%= product.description %></td>
-        <td><%= product.stores.map(&:name).join(', ') %></td>
+         <td>
+          <% product.product_stores.each do |product_store| %>
+            <%= product_store.store.name %><br>
+          <% end %>
+        </td>
+        <td>
+          <% product.product_stores.each do |product_store| %>
+            <%= number_to_currency(product_store.price) %><br>
+          <% end %>
+        </td>
+         <td>
+          <% product.quantities.each do |quantity| %>
+            
+            <%= quantity.quantity %><br>
+          <% end %>
+        </td>
         <td>
           <% if product.image.present? %>
             <%= image_tag product.image, width: '50', height: '50'  %>

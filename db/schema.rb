@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_18_121111) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_21_071755) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -66,6 +66,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_121111) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "quantities", force: :cascade do |t|
+    t.integer "product_id", null: false
+    t.integer "store_id", null: false
+    t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_quantities_on_product_id"
+    t.index ["store_id"], name: "index_quantities_on_store_id"
+  end
+
   create_table "stores", force: :cascade do |t|
     t.string "name"
     t.string "location"
@@ -79,4 +89,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_18_121111) do
   add_foreign_key "prices", "stores"
   add_foreign_key "product_stores", "products"
   add_foreign_key "product_stores", "stores"
+  add_foreign_key "quantities", "products"
+  add_foreign_key "quantities", "stores"
 end

@@ -29,32 +29,118 @@
 
 
 require 'faker'
+stores = Store.all
 
-# Create Stores
+# # Create Stores
+# stores = []
+# 10.times do
+#   store = Store.create!(
+#     name: Faker::Company.name,
+#     location: Faker::Address.city
+#   )
+#   stores << store
+# end
+
+# # Create Products and Associate Them with Multiple Stores
+# 20.times do
+#   product = Product.create!(
+#     name: Faker::Commerce.product_name,
+#     description: Faker::Lorem.sentence
+#   )
+#   product.image.attach(io: URI.open(Faker::Avatar.image), filename: "#{Faker::Lorem.word}.png")
+#   #
+
+#   # Associate the Product with Multiple Stores
+#   stores.sample(rand(1..stores.length)).each do |store|
+#     product_stores_attributes = {
+#       store_id: store.id
+#     }
+#     product.product_stores.create!(product_stores_attributes)
+#   end
+# end
+
+
+# product = Product.create!(name: 'Sample Product', description: 'Description')
+
+# stores.each do |store|
+#   Price.create!(product: product, store: store, price: Faker::Commerce.price(range: 10..100))
+# end
+
+
+# product = Product.create!(name: 'Sample Product', description: 'Description')
+
+# stores.each do |store|
+#   price = Faker::Commerce.price(range: 10..100)
+#   product_store = product.product_stores.build(store: store, price: price)
+#   product_store.save
+# end
+
+
+
+
+require 'faker'
+
+# # Create Stores
+# stores = []
+# 10.times do
+#   stores << Store.create!(
+#     name: Faker::Company.name,
+#     location: Faker::Address.full_address
+#   )
+# end
+
+# # Create Products with associated ProductStores and Prices
+# 30.times do
+#   product = Product.create!(
+#     name: Faker::Commerce.product_name,
+#     description: Faker::Lorem.sentence
+#   )
+#   product.image.attach(io: URI.open(Faker::Avatar.image), filename: "#{Faker::Lorem.word}.png")
+
+#   stores.each do |store|
+#     price = Faker::Commerce.price(range: 10..100)
+#     ProductStore.create!(
+#       product: product,
+#       store: store,
+#       price: price
+#     )
+#   end
+# end
+
+
+
+
 stores = []
 10.times do
-  store = Store.create!(
+  stores << Store.create!(
     name: Faker::Company.name,
-    location: Faker::Address.city
+    location: Faker::Address.full_address
   )
-  stores << store
 end
 
-# Create Products and Associate Them with Multiple Stores
-20.times do
+# Create Products with associated ProductStores, Prices, and Quantities
+30.times do
   product = Product.create!(
     name: Faker::Commerce.product_name,
     description: Faker::Lorem.sentence
   )
   product.image.attach(io: URI.open(Faker::Avatar.image), filename: "#{Faker::Lorem.word}.png")
-  #
 
-  # Associate the Product with Multiple Stores
-  stores.sample(rand(1..stores.length)).each do |store|
-    product_stores_attributes = {
-      store_id: store.id
-    }
-    product.product_stores.create!(product_stores_attributes)
+  stores.each do |store|
+    price = Faker::Commerce.price(range: 10..100)
+    quantity = Faker::Number.between(from: 0, to: 100)
+    
+    ProductStore.create!(
+      product: product,
+      store: store,
+      price: price
+    )
+    
+    Quantity.create!(
+      product: product,
+      store: store,
+      quantity: quantity
+    )
   end
 end
 

@@ -7,7 +7,8 @@ class ProductsController < ApplicationController
 	      @products = Product.paginate(page: params[:page], per_page: 20).where("name LIKE ?", "%#{params[:search]}%")
 	    else
 	      # @products = Product.all
-	      @products = Product.paginate(page: params[:page], per_page: 20)
+	      # @products = Product.paginate(page: params[:page], per_page: 20)
+        @products = Product.includes(:product_stores).paginate(page: params[:page], per_page: 20)
 	    end
 	end
 
@@ -15,9 +16,10 @@ class ProductsController < ApplicationController
 		@product = Product.find(params[:id])
 	end
 	def new
-	   @product = Product.new
-	   @stores = Store.all
-	end
+    @product = Product.new
+    # @product_stores = @product.product_stores.build
+    @stores = Store.all
+  end
 
   # def create
   #   @product = Product.new(product_params)
@@ -76,10 +78,44 @@ class ProductsController < ApplicationController
  #    end
  #  end
 
-	 def create
+	 # def create
+  #   @product = Product.new(product_params)
+  #   if @product.save
+  #     redirect_to products_path
+  #   else
+  #     @stores = Store.all
+  #     render :new
+  #   end
+  # end
+
+  # def create
+  #   @product = Product.new(product_params)
+
+  #   if @product.save
+  #     create_product_stores_with_prices(@product, params[:product][:store_ids], params[:product][:product_stores_attributes])
+  #     redirect_to products_path, notice: 'Product was successfully created.'
+  #   else
+  #     @stores = Store.all
+  #     render :new
+  #   end
+  # end
+
+#   def create
+#   @product = Product.new(product_params)
+
+#   if @product.save
+#     store_prices(params[:product][:store_ids], params[:product][:product_stores_attributes])
+#     redirect_to products_path, notice: 'Product was successfully created.'
+#   else
+#     @stores = Store.all
+#     render :new
+#   end
+# end
+
+ def create
     @product = Product.new(product_params)
     if @product.save
-      redirect_to products_path
+      redirect_to products_path, notice: 'Product was successfully created.'
     else
       @stores = Store.all
       render :new
@@ -95,8 +131,9 @@ class ProductsController < ApplicationController
   def update
     @product = Product.find(params[:id])
     if @product.update(product_params)
-      redirect_to products_path, notice: 'Product was successfully updated.'
+      redirect_to @product, notice: 'Product was successfully updated.'
     else
+      puts @product.errors.full_messages
       render :edit
     end
   end
@@ -128,11 +165,53 @@ end
 
   private
 
-  def product_params
-    params.require(:product).permit(:name, :description, :image, store_ids: [])
-    # params.require(:product).permit(:name, :description, store_ids: [:price])
-    # params.require(:product).permit(:name, :description, store_ids: {})
-    # params.require(:product).permit(:name, :description, product_stores_attributes: [:store_id, :price])
-    # params.require(:product).permit(:name, :description, :store_id, prices_attributes: [:store_id, :amount])
+  # def create_product_stores_with_prices(product, store_ids, product_stores_attributes)
+  #   store_ids.each do |store_id|
+  #     price = product_stores_attributes[store_id.to_s][:price]
+  #     next if price.blank?
+      
+  #     product.product_stores.create(store_id: store_id, price: price)
+  #   end
+  # end
+
+  def store_prices(store_ids, product_stores_attributes)
+  store_ids.each do |store_id|
+    price = product_stores_attributes[store_id.to_s][:price]
+    next if price.blank?
+
+    Price.create(product: @product, store_id: store_id, price: price)
   end
+end
+
+  # def product_params
+  #   params.require(:product).permit(:name, :description, :image, store_ids: [])
+  #   # params.require(:product).permit(:name, :description, store_ids: [:price])
+  #   # params.require(:product).permit(:name, :description, store_ids: {})
+  #   # params.require(:product).permit(:name, :description, product_stores_attributes: [:store_id, :price])
+  #   # params.require(:product).permit(:name, :description, :store_id, prices_attributes: [:store_id, :amount])
+  #   # params.require(:product).permit(:name, :description, :image, store_ids: [], product_stores_attributes: [:store_id, :price])
+
+
+  #   #   params.require(:product).permit(
+  #   #   :name,
+  #   #   :description,
+  #   #   :image,
+  #   #   store_ids: [],
+  #   #   product_stores_attributes: [:store_id, :price]
+  #   # )
+  # end
+
+
+
+#the 2nd params line is working when generating data from faker
+  def product_params
+  # params.require(:product).permit(:name, :description, :image, store_id: [])
+  # params.require(:product).permit(:name, :description, :image, store_ids: [], quantities_attributes: [:store_id, :quantity])
+  params.require(:product).permit(:name, :description, :image, product_stores_attributes: [:store_id, :price], quantities_attributes: [:store_id, :quantity])
+    # product_stores_attributes: [:store_id, :price])
+end
+
+
+
+
 end

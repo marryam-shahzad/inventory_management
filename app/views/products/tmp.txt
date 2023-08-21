@@ -25,3 +25,188 @@
     <li><%= "#{store.name}: #{store_price(@product, store)}" %></li>
   <% end %>
 </ul>
+
+
+
+
+
+
+
+
+ <td>
+        <% product.product_stores.each do |product_store| %>
+          <% price = Price.find_by(product_id: product.id, store_id: product_store.store_id) %>
+          <%= product_store.store.name %>: <%= price ? number_to_currency(price.price) : 'N/A' %><br>
+        <% end %>
+      </td>
+
+
+
+
+
+      <div class="field">
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
+  </div>
+
+
+
+
+
+
+  <h1>Edit Product</h1>
+
+<%= form_with model: @product, url: product_path(@product), method: :patch do |form| %>
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= form.label :description %>
+    <%= form.text_area :description %>
+  </div>
+  <%= form.file_field :image %>
+  
+
+
+<div class="field">
+    <%= f.label :store_ids, "Select Stores" %><br>
+    <%= f.collection_check_boxes :store_ids, Store.all, :id, :name do |b| %>
+      <%= b.label { b.check_box + b.text } %><br>
+      <%= b.fields_for :product_stores, @product.product_stores.where(store_id: b.value) do |ps| %>
+        <%= ps.label :price, "Price" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="actions">
+    <%= form.submit 'Update Product', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', products_path, class: 'btn btn-secondary' %>
+
+
+ <div>
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, @stores, :id, :name %>
+  </div>
+
+
+
+
+
+
+
+
+     <div class="field">
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, Store.all, :id, :name %>
+  </div>
+
+  <div class="field">
+    <% Store.all.each do |store| %>
+      <%= form.fields_for :product_stores_attributes, @product.product_stores.where(store_id: store.id).first_or_initialize do |ps| %>
+        <%= ps.hidden_field :store_id, value: store.id %>
+        <%= ps.label :price, "Price for #{store.name}" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
+  </div>
+
+
+
+
+
+
+
+
+
+
+      <div class="field">
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <%= form.collection_check_boxes :store_ids, Store.all, :id, :name %>
+  </div>
+
+  <div class="field">
+    <% Store.all.each do |store| %>
+      <%= form.fields_for :product_stores_attributes, @product.product_stores.where(store_id: store.id).first_or_initialize do |ps| %>
+        <%= ps.hidden_field :store_id, value: store.id %>
+        <%= ps.label :price, "Price for #{store.name}" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :store_ids, "Select Stores" %><br>
+    <% Store.all.each do |store| %>
+      <%= form.fields_for :product_stores_attributes, @product.product_stores.where(store_id: store.id).first_or_initialize do |ps| %>
+        <%= ps.hidden_field :store_id, value: store.id %>
+        <%= ps.label :price, "Price for #{store.name}" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <h1><%= @product.name %></h1>
+
+<p><strong>Description:</strong> <%= @product.description %></p>
+
+
+<table>
+  <tr>
+    <th>Stores</th>
+    <th>Prices</th>
+  </tr>
+  <% @product.product_stores.each do |product_store| %>
+    <tr>
+      <td><%= product_store.store.name %></td>
+      <td><%= number_to_currency(product_store.price) %></td>
+     
+    </tr>
+    <p>
+  <strong>Quantities:</strong>
+  <ul>
+    <% @product.quantities.each do |quantity| %>
+      <li><%= quantity.store.name %>: <%= quantity.quantity %></li>
+    <% end %>
+  </ul>
+</p>
+
+  <% end %>
+</table>
+<p>
+  <%= image_tag url_for(@product.image) if @product.image.attached? %>
+</p>
+
+
+
+
+ 
+     <div class="field">
+    <%= f.label :store_ids, "Select Stores" %><br>
+    <%= f.collection_check_boxes :store_ids, Store.all, :id, :name %>
+  </div>
+  <div class="field">
+    <%= f.label :store_ids, "Select Stores" %><br>
+    <% @stores.each do |store| %>
+      <%= f.fields_for :product_stores_attributes, @product.product_stores.where(store_id: store.id).first_or_initialize do |ps| %>
+        <%= ps.hidden_field :store_id, value: store.id %>
+        <%= ps.label :price, "Price for #{store.name}" %>
+        <%= ps.text_field :price %><br>
+      <% end %>
+    <% end %>
+  </div>
+  

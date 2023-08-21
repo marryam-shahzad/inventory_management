@@ -2,18 +2,37 @@
 
 <p><strong>Description:</strong> <%= @product.description %></p>
 
-<p><strong>Stores:</strong></p>
-<ul>
-  <% @product.stores.each do |store| %>
-    <li><%= store.name %> - <%= store.location %></li>
+
+
+
+<table>
+  <tr>
+    <th>Stores</th>
+    <th>Quantities</th>
+    <th>Prices</th>
+  </tr>
+  <% @product.product_stores.each do |product_store| %>
+    <tr>
+      <td><%= product_store.store.name %></td>
+      <td>
+        <ul>
+          <% @product.quantities.each do |quantity| %>
+            <% if quantity.store_id == product_store.store_id %>
+              <li><%= quantity.quantity %></li>
+            <% end %>
+          <% end %>
+        </ul>
+      </td>
+      <td><%= number_to_currency(product_store.price) %></td>
+    </tr>
   <% end %>
-</ul>
+</table>
+
+
+
 <p>
   <%= image_tag url_for(@product.image) if @product.image.attached? %>
 </p>
-
-
-
 
 <%= link_to "Back to Products", products_path %>
 

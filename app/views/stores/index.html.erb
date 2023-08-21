@@ -1,12 +1,14 @@
 <%= link_to "Go to Products", products_path %>
 <h1>Stores</h1>
+<%= link_to "New Store", new_store_path %>
+
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
       <th>Location</th>
-      <th>Show</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -14,11 +16,16 @@
       <tr>
         <td><%= store.name %></td>
         <td><%= store.location %></td>
-        <td><%= link_to "Show", store_path(store) %></td>
+        <td>
+          <%= link_to 'Show', store_path(store) %>
+          <%= link_to 'Edit', edit_store_path(store) %>
+          <%= form_for store, url: store_path(store), method: :delete, data: { confirm: 'Are you sure you want to delete this store?' } do |f| %>
+            <%= f.submit 'Delete' %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "New Store", new_store_path %>
-<%= link_to "Back to Products", products_path %>
+<%= will_paginate @products %>
